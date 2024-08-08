@@ -12,3 +12,4 @@
 /home/nick/Desktop/exercice/Question1/obj/Debug/net8.0/Question1.pdb
 /home/nick/Desktop/exercice/Question1/obj/Debug/net8.0/Question1.genruntimeconfig.cache
 /home/nick/Desktop/exercice/Question1/obj/Debug/net8.0/ref/Question1.dll
+/home/nick/Desktop/exercice/Question1/obj/Debug/net8.0/Question1.sourcelink.json
