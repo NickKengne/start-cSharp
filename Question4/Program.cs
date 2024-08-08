@@ -1,94 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Question4
+namespace MathFunctions
 {
     class Program
     {
         static void Main(string[] args)
         {
-            List<int> numbers = new List<int>();
-            List<double> squares = new List<double>();
-            List<double> cubes = new List<double>();
-            List<double> squareRoots = new List<double>();
-
-            Console.WriteLine("**********************************************************************");
-            Console.WriteLine("FONCTIONS MATHÉMATIQUES");
-            Console.WriteLine("**********************************************************************");
-            Console.WriteLine("Saisir des nombres entiers positifs (0 pour arrêter) :");
+            HeaderMenu();
+            List<int> numbers =[];
+            List<int> squares = [];
+            List<int> cubes = [];
+            List<double> squareRoots = [];
 
             while (true)
             {
-                Console.Write("Nombre : ");
-                string input = Console.ReadLine().Trim();
+                Console.Write("Saisir un nombre entier positif (0 pour arrêter) : ");
+                string input = Console.ReadLine() ?? string.Empty;
 
-                if (!int.TryParse(input, out int number) || number < 0)
+                if (input == "0") break;
+
+                if (int.TryParse(input, out int number) && number > 0)
                 {
-                    Console.CursorTop -= 1;
-                    Console.WriteLine($"La valeur saisie n'est pas un nombre entier positif.");
-                    continue;
-                }
+                    numbers.Add(number);
+                    squares.Add(number * number);
+                    cubes.Add(number * number * number);
+                    squareRoots.Add(Math.Round(Math.Sqrt(number), 1));
 
-                if (number == 0)
+                    DisplayResults(number, number * number, number * number * number, Math.Round(Math.Sqrt(number), 1));
+                }
+                else
                 {
-                    break;
+                    DisplayErrorMessage();
                 }
-
-                double square = Math.Pow(number, 2);
-                double cube = Math.Pow(number, 3);
-                double squareRoot = Math.Sqrt(number);
-
-                numbers.Add(number);
-                squares.Add(square);
-                cubes.Add(cube);
-                squareRoots.Add(squareRoot);
-
-                Console.CursorTop -= 1;
-                Console.WriteLine($"Nombre : {number}\tCarré : {square}\tCube : {cube}\tRacine carrée : {squareRoot:F2}");
             }
 
-            if (numbers.Count == 0)
-            {
-                Console.WriteLine("Aucun nombre entier saisi.");
-                return;
-            }
-
-            double averageNumber = CalculateAverage(numbers);
-            double averageSquare = CalculateAverage(squares);
-            double averageCube = CalculateAverage(cubes);
-            double averageSquareRoot = CalculateAverage(squareRoots);
-
-            Console.WriteLine("\nMOYENNES :");
-            Console.WriteLine($"Nombre : {averageNumber:F1}");
-            Console.WriteLine($"Carré : {averageSquare:F1}");
-            Console.WriteLine($"Cube : {averageCube:F1}");
-            Console.WriteLine($"Racine carrée : {averageSquareRoot:F1}");
+            DisplayAverages(numbers, squares, cubes, squareRoots);
         }
 
-        static double CalculateAverage(List<double> values)
+        static void HeaderMenu()
         {
-            if (values.Count == 0)
-                return 0;
-
-            double sum = 0;
-            foreach (var value in values)
-            {
-                sum += value;
-            }
-            return sum / values.Count;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("******************************************************");
+            Console.WriteLine("\t\tFONCTIONS MATHÉMATIQUES");
+            Console.WriteLine("******************************************************");
+            Console.ResetColor();
+            Console.WriteLine("Saisir des nombres entiers positifs (0 pour arrêter) :\n");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("{0,-10} {1,-10} {2,-10} {3,-10}", "Nombre", "Carré", "Cube", "Racine carrée");
+            Console.ResetColor();
         }
 
-        static double CalculateAverage(List<int> values)
+        static void DisplayResults(int number, int square, int cube, double squareRoot)
         {
-            if (values.Count == 0)
-                return 0;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("{0,-10} {1,-10} {2,-10} {3,-10}", number, square, cube, squareRoot);
+            Console.ResetColor();
+        }
 
-            double sum = 0;
-            foreach (var value in values)
-            {
-                sum += value;
-            }
-            return sum / values.Count;
+        static void DisplayErrorMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("La valeur saisie n'est pas un nombre entier positif.");
+            Console.ResetColor();
+        }
+
+        static void DisplayAverages(List<int> numbers, List<int> squares, List<int> cubes, List<double> squareRoots)
+        {
+            double avgNumber = numbers.Average();
+            double avgSquare = squares.Average();
+            double avgCube = cubes.Average();
+            double avgSquareRoot = squareRoots.Average();
+
+            Console.WriteLine("\n");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("MOYENNES :\n");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("{0,-10} {1,-10} {2,-10} {3,-10}", "Nombre", "Carré", "Cube", "Racine carrée");
+            Console.WriteLine("{0,-10:F1} {1,-10:F1} {2,-10:F1} {3,-10:F1}", avgNumber, avgSquare, avgCube, avgSquareRoot);
+            Console.ResetColor();
         }
     }
 }

@@ -1,113 +1,135 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 
-namespace Question3
+namespace BowlingScores
 {
     class Program
     {
         static void Main(string[] args)
         {
+            string playerName = DemanderNomJoueur();
+            List<int> scores = SaisirScores();
+
+            AfficherResultats(playerName, scores);
+        }
+
+        static string DemanderNomJoueur()
+        {
             string playerName;
-            List<int> scores = new List<int>();
-            string input;
-            int score;
-
-            Console.WriteLine("************************************************************");
-            Console.WriteLine("PARTIES DE QUILLES");
-            Console.WriteLine("************************************************************");
-
-            // Demander le nom du joueur
-                Console.Write("Saisir le nom du joueur : ");
             do
             {
-                playerName = Console.ReadLine().Trim();
+                Console.Write("Saisir le nom du joueur : ");
+                playerName = Console.ReadLine() ?? string.Empty;
                 if (string.IsNullOrEmpty(playerName))
                 {
                     Console.WriteLine("Le nom est obligatoire, recommencez.");
                 }
             } while (string.IsNullOrEmpty(playerName));
-            playerName = playerName.ToUpper();
 
-            // Demander les scores des parties
+            return playerName.ToUpper();
+        }
+
+        static List<int> SaisirScores()
+        {
+            List<int> scores = [];
+            string input;
             int partieNumber = 1;
+
+            Console.WriteLine("Saisir le score de chacune des parties (\"fin\" pour terminer) :");
+
             do
             {
                 Console.Write($"Partie #{partieNumber} : ");
-                input = Console.ReadLine().Trim();
+                input = Console.ReadLine() ?? string.Empty;
 
-                if (input.ToLower().Equals("fin"))
+                if (input.Equals("fin", StringComparison.CurrentCultureIgnoreCase))
                 {
                     break;
                 }
 
-                if (!int.TryParse(input, out score))
+                if (!int.TryParse(input, out int score) || score < 0 || score > 300)
                 {
-                    Console.WriteLine("Score invalide, recommencez.");
+                    if (!int.TryParse(input, out score))
+                    {
+                        Console.WriteLine("Score invalide, recommencez.");
+                    }
+                    else if (score < 0)
+                    {
+                        Console.WriteLine("Le score ne doit pas être inférieur à 0, recommencez.\n");
+                    }
+                    else if (score > 300)
+                    {
+                        Console.WriteLine("Le score ne doit pas dépasser 300, recommencez.\n");
+                    }
                     continue;
                 }
 
-                if (score < 0)
-                {
-                    Console.WriteLine("Le score ne doit pas être inférieur à 0, recommencez.");
-                    continue;
-                }
-
-                if (score > 300)
-                {
-                    Console.WriteLine("Le score ne doit pas dépasser 300, recommencez.");
-                    continue;
-                }
-
-                // Ajouter le score à la liste
                 scores.Add(score);
-                // Afficher le niveau et le message correspondant
-                string niveau;
-                string message;
-                if (score == 300)
-                {
-                    niveau = "A+";
-                    message = "Partie parfaite !";
-                }
-                else if (score >= 250)
-                {
-                    niveau = "A";
-                    message = "Excellent !";
-                }
-                else if (score >= 200)
-                {
-                    niveau = "B";
-                    message = "Très bon !";
-                }
-                else if (score >= 150)
-                {
-                    niveau = "C";
-                    message = "Bon !";
-                }
-                else if (score >= 100)
-                {
-                    niveau = "D";
-                    message = "Correct";
-                }
-                else
-                {
-                    niveau = "E";
-                    message = "Oups :-)";
-                }
-
-                Console.WriteLine($"Niveau {niveau} : {message}");
+                AfficherNiveauEtMessage(score);
                 partieNumber++;
 
             } while (true);
 
-            // Calculer la moyenne des scores
-            double moyenne = 0;
-            if (scores.Count > 0)
+            return scores;
+        }
+
+        static void AfficherNiveauEtMessage(int score)
+        {
+            string niveau;
+            string message;
+
+            if (score == 300)
             {
-                moyenne = scores.Average();
+                niveau = "A+";
+                message = "Partie parfaite !";
+            }
+            else if (score >= 250)
+            {
+                niveau = "A";
+                message = "Excellent !";
+            }
+            else if (score >= 200)
+            {
+                niveau = "B";
+                message = "Très bon !";
+            }
+            else if (score >= 150)
+            {
+                niveau = "C";
+                message = "Bon !";
+            }
+            else if (score >= 100)
+            {
+                niveau = "D";
+                message = "Correct";
+            }
+            else
+            {
+                niveau = "E";
+                message = "Oups :-)";
             }
 
-            // Afficher les résultats
-            Console.WriteLine($"{playerName} : Moyenne de {moyenne:F1} en {scores.Count} partie(s)");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Niveau {niveau} : {message}\n");
+            Console.ResetColor();
+        }
+
+        static void AfficherResultats(string playerName, List<int> scores)
+        {
+            if (scores.Count > 0)
+            {
+                double moyenne = scores.Average();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"{playerName} : Moyenne de {moyenne:F1} en {scores.Count} partie(s).\n");
+                Console.ResetColor();
+
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"{playerName} : Aucune partie jouée.");
+                Console.ResetColor();
+
+            }
         }
     }
 }

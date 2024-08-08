@@ -1,52 +1,169 @@
 ﻿using System;
 
-namespace Question2
+namespace CalculateurIMC
 {
     class Program
     {
         static void Main(string[] args)
         {
-            int nombreCalculs = 0;
-            char refaireCalcul;
+            int nombreDeCalculs = 0;
+            string continuer;
 
             do
             {
                 Console.Clear();
+                HeaderMenu();
 
-                Console.Write("Entrez votre poids en kg:");
-                double poids = double.Parse(Console.ReadLine());
+                double poids = DemanderPoids();
+                double taille = DemanderTaille();
 
-                Console.Write("Entrez votre taille en mètres:");
-                double taille = double.Parse(Console.ReadLine());
+                double imc = CalculerIMC(poids, taille);
+                string categorie = DeterminerCategorie(imc);
+                string risque = DeterminerRisque(imc);
 
-                double imc = poids / (taille * taille);
-                Console.WriteLine($"Votre IMC est: {imc:F2}");
+                AfficherResultat(imc, categorie, risque);
 
-                if (imc < 18.5)
+                nombreDeCalculs++;
+
+                continuer = DemanderSiContinuer();
+
+            } while (continuer == "oui");
+
+            AfficherNombreCalculs(nombreDeCalculs);
+        }
+
+        static void HeaderMenu()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("************************************************************");
+            Console.WriteLine("\t\tCALCULATEUR D'IMC");
+            Console.WriteLine("************************************************************");
+            Console.ResetColor();
+        }
+
+        static double DemanderPoids()
+        {
+            double poids;
+            do
+            {
+                Console.Write("Votre poids en kg : ");
+                string input = Console.ReadLine() ?? string.Empty;
+
+                if (!double.TryParse(input, out poids) || poids <= 0)
                 {
-                    Console.WriteLine("Catégorie: Insuffisance pondérale (maigreur)");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Poids invalide, recommencez.");
+                    Console.ResetColor();
+
                 }
-                else if (imc < 24.9)
+
+            } while (poids <= 0);
+
+            return poids;
+        }
+
+        static double DemanderTaille()
+        {
+            double taille;
+            do
+            {
+                Console.Write("Votre taille en mètres : ");
+                string input = Console.ReadLine() ?? string.Empty;
+
+                if (!double.TryParse(input, out taille) || taille <= 0)
                 {
-                    Console.WriteLine("Catégorie: Corpulence normale");
-                }
-                else if (imc < 29.9)
-                {
-                    Console.WriteLine("Catégorie: Surpoids");
-                }
-                else
-                {
-                    Console.WriteLine("Catégorie: Obésité");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Taille invalide, recommencez.");
+                    Console.ResetColor();
                 }
 
-                nombreCalculs++;
+            } while (taille <= 0);
 
-                Console.WriteLine("Voulez-vous refaire un calcul? (o/n)");
-                refaireCalcul = Console.ReadKey().KeyChar;
+            return taille;
+        }
 
-            } while (refaireCalcul == 'o' || refaireCalcul == 'O');
+        static double CalculerIMC(double poids, double taille)
+        {
+            return poids / (taille * taille);
+        }
 
-            Console.WriteLine($"\nNombre de calculs effectués: {nombreCalculs}");
+        static string DeterminerCategorie(double imc)
+        {
+            if (imc <= 18.5)
+            {
+                return "un poids insuffisant";
+            }
+            else if (imc < 25)
+            {
+                return "un poids santé";
+            }
+            else if (imc < 30)
+            {
+                return "un léger excès de poids";
+            }
+            else if (imc < 35)
+            {
+                return "une obésité classe I";
+            }
+            else if (imc < 40)
+            {
+                return "une obésité classe II";
+            }
+            else
+            {
+                return "une obésité classe III";
+            }
+        }
+
+        static string DeterminerRisque(double imc)
+        {
+            if (imc <= 18.5)
+            {
+                return "accrus";
+            }
+            else if (imc < 25)
+            {
+                return "moindres";
+            }
+            else if (imc < 30)
+            {
+                return "accrus";
+            }
+            else if (imc < 35)
+            {
+                return "élevés";
+            }
+            else if (imc < 40)
+            {
+                return "très élevés";
+            }
+            else
+            {
+                return "extrêmement élevés";
+            }
+        }
+
+        static void AfficherResultat(double imc, string categorie, string risque)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Votre IMC est de {imc:F1}, soit {categorie} et des risques {risque} de maladies.");
+            Console.ResetColor();
+
+        }
+
+        static string DemanderSiContinuer()
+        {
+            string continuer;
+            Console.Write("Voulez-vous effectuer un autre calcul? (oui/non) : ");
+            continuer = Console.ReadLine() ?? string.Empty;
+            return continuer;
+        }
+
+        static void AfficherNombreCalculs(int nombreDeCalculs)
+        {
+             Console.ForegroundColor = ConsoleColor.DarkMagenta;
+             Console.WriteLine($"Vous avez effectué {nombreDeCalculs} calcul(s).");
+             Console.ResetColor();
         }
     }
 }
