@@ -117,30 +117,40 @@ namespace CalculateurIMC
 
         static string DeterminerRisque(double imc)
         {
-            if (imc <= 18.5)
+            return imc switch
             {
-                return "accrus";
-            }
-            else if (imc < 25)
-            {
-                return "moindres";
-            }
-            else if (imc < 30)
-            {
-                return "accrus";
-            }
-            else if (imc < 35)
-            {
-                return "élevés";
-            }
-            else if (imc < 40)
-            {
-                return "très élevés";
-            }
-            else
-            {
-                return "extrêmement élevés";
-            }
+                <= 18.5 => "accrus",
+                < 25 => "moindres",
+                < 30 => "accrus",
+                < 35 => "élevés",
+                < 40 => "très élevés",
+                _ => "extrêmement élevés"
+            };
+
+            // if (imc <= 18.5)
+            // {
+            //     return "accrus";
+            // }
+            // else if (imc < 25)
+            // {
+            //     return "moindres";
+            // }
+            // else if (imc < 30)
+            // {
+            //     return "accrus";
+            // }
+            // else if (imc < 35)
+            // {
+            //     return "élevés";
+            // }
+            // else if (imc < 40)
+            // {
+            //     return "très élevés";
+            // }
+            // else
+            // {
+            //     return "extrêmement élevés";
+            // }
         }
 
         static void AfficherResultat(double imc, string categorie, string risque)
@@ -153,10 +163,8 @@ namespace CalculateurIMC
 
         static string DemanderSiContinuer()
         {
-            string continuer;
             Console.Write("Voulez-vous effectuer un autre calcul? (oui/non) : ");
-            continuer = Console.ReadLine() ?? string.Empty;
-            return continuer;
+            return Console.ReadLine() ?? string.Empty;
         }
 
         static void AfficherNombreCalculs(int nombreDeCalculs)

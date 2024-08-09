@@ -46,20 +46,19 @@ namespace BowlingScores
                     break;
                 }
 
-                if (!int.TryParse(input, out int score) || score < 0 || score > 300)
+                if (!int.TryParse(input, out int score))
                 {
-                    if (!int.TryParse(input, out score))
-                    {
-                        Console.WriteLine("Score invalide, recommencez.");
-                    }
-                    else if (score < 0)
-                    {
-                        Console.WriteLine("Le score ne doit pas être inférieur à 0, recommencez.\n");
-                    }
-                    else if (score > 300)
-                    {
-                        Console.WriteLine("Le score ne doit pas dépasser 300, recommencez.\n");
-                    }
+                    Console.WriteLine("Score invalide, recommencez.");
+                    continue;
+                }
+                else if (score < 0)
+                {
+                    Console.WriteLine("Le score ne doit pas être inférieur à 0, recommencez.\n");
+                    continue;
+                }
+                else if (score > 300)
+                {
+                    Console.WriteLine("Le score ne doit pas dépasser 300, recommencez.\n");
                     continue;
                 }
 
@@ -72,41 +71,56 @@ namespace BowlingScores
             return scores;
         }
 
+        // TODO: Completer les règles
+        private static readonly Dictionary<int, (string, string)> _regles = new()
+        {
+            { 300, ("A+", "Partie parfaite !") },
+            { 200, ("A+", "Partie parfaite !") },
+        };
+
         static void AfficherNiveauEtMessage(int score)
         {
-            string niveau;
-            string message;
+            var (niveau, message) = _regles[score];
+            // var (niveau, message) = score switch
+            // {
+            //     300 => ("A+", "Partie parfaite !"),
+            //     250 => ("A", "Excellent !"),
+            //     200 => ("B", "Très bon !"),
+            //     150 => ("C", "Bon !"),
+            //     100 => ("D", "Correct"),
+            //     _ => ("E", "Oups :-)")
+            // };
 
-            if (score == 300)
-            {
-                niveau = "A+";
-                message = "Partie parfaite !";
-            }
-            else if (score >= 250)
-            {
-                niveau = "A";
-                message = "Excellent !";
-            }
-            else if (score >= 200)
-            {
-                niveau = "B";
-                message = "Très bon !";
-            }
-            else if (score >= 150)
-            {
-                niveau = "C";
-                message = "Bon !";
-            }
-            else if (score >= 100)
-            {
-                niveau = "D";
-                message = "Correct";
-            }
-            else
-            {
-                niveau = "E";
-                message = "Oups :-)";
-            }
+            // if (score == 300)
+            // {
+            //     niveau = "A+";
+            //     message = "Partie parfaite !";
+            // }
+            // else if (score >= 250)
+            // {
+            //     niveau = "A";
+            //     message = "Excellent !";
+            // }
+            // else if (score >= 200)
+            // {
+            //     niveau = "B";
+            //     message = "Très bon !";
+            // }
+            // else if (score >= 150)
+            // {
+            //     niveau = "C";
+            //     message = "Bon !";
+            // }
+            // else if (score >= 100)
+            // {
+            //     niveau = "D";
+            //     message = "Correct";
+            // }
+            // else
+            // {
+            //     niveau = "E";
+            //     message = "Oups :-)";
+            // }
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Niveau {niveau} : {message}\n");
