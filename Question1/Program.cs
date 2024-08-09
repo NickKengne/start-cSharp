@@ -16,6 +16,7 @@ class Program
 
         double damage = CalculateDamage(attackPower, defensePower, effectivenessFactor);
 
+        //interpoler ici , et extraire la chaine 
         Console.WriteLine($"\nL'attaque {(effectivenessFactor == 2 ? "super efficace" : effectivenessFactor == 1)} a produit {damage} points de dommages.");
         if (damage >= 100)
         {
